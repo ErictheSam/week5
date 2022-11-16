@@ -1,77 +1,83 @@
 import unittest
-import logic
+from logic import FullBoard
 
 
 class TestLogic(unittest.TestCase):
 
     def test_get_winner(self):
-        board = [
+        board = FullBoard(True)
+        board.board = [
             ['X', None, 'O'],
             [None, 'X', None],
             [None, 'O', 'X'],
         ]
-        self.assertEqual(logic.get_winner(board), 'X')
-        board = [
+        self.assertEqual(board.get_winner(), 'X')
+        board.board = [
             ['X', 'O', 'O'],
             [None, 'O', None],
             [None, 'O', 'X'],
         ]
-        self.assertEqual(logic.get_winner(board), 'O')
-        board = [
+        self.assertEqual(board.get_winner(), 'O')
+        board.board = [
             ['X', 'O', 'O'],
             ['O', 'X', 'X'],
             ['X', 'X', 'O'],
         ]
-        self.assertEqual(logic.get_winner(board), None)
-
-    def test_make_empty_board(self):
-        board_new = [
-            [None, None, None],
-            [None, None, None],
-            [None, None, None],
-        ]
-        self.assertEqual(logic.make_empty_board(), board_new)
+        self.assertEqual(board.get_winner(), None)
 
     def test_legal_move(self):
-        board = [
+        board = FullBoard(True)
+        board.board = [
             ['X', None, 'O'],
             [None, 'X', None],
             [None, 'O', 'X'],
         ]
         row = 4
         column = 2
-        self.assertEqual(logic.legal_move(board,row,column), False)
+        self.assertEqual(board.legal_move(row,column), False)
         row = 2
         column = 2
-        self.assertEqual(logic.legal_move(board,row,column), False)
+        self.assertEqual(board.legal_move(row,column), False)
         row = 2
         column = 1
-        self.assertEqual(logic.legal_move(board,row,column), True)
+        self.assertEqual(board.legal_move(row,column), True)
 
     def test_board_full(self):
-        board = [
+        board = FullBoard(True)
+        board.board = [
             ['X', None, 'O'],
             [None, 'X', None],
             [None, 'O', 'X'],
         ]
-        self.assertEqual(logic.board_full(board), False)
-        board = [
+        self.assertEqual(board.board_full(), False)
+        board.board = [
             ['X', 'O', 'O'],
             ['O', 'X', 'X'],
             ['X', 'X', 'X'],
         ]
-        self.assertEqual(logic.board_full(board), True)
+        self.assertEqual(board.board_full(), True)
 
-    def test_other_player(self):
-        player = "X"
-        self.assertEqual(logic.other_player(player), "O")
-        player = "O"
-        self.assertEqual(logic.other_player(player), "X")
-        player = "A"
-        """This should be an assertion error."""
-        with self.assertRaises(AssertionError):
-            logic.other_player(player)
+    def test_flip(self):
+        board = FullBoard(True)
+        board.flip_player()
+        self.assertEqual(board.player, "O")
+        board.flip_player()
+        self.assertEqual(board.player, "X")
 
+    def test_random_chess(self):
+        board = FullBoard(True)
+        board.board = [
+            ['X', None, 'O'],
+            [None, 'X', None],
+            [None, 'O', 'X'],
+        ]
+        row, col = board.random_chess()
+        self.assertEqual(board.board[row-1][col-1], None)
+
+    def test_move(self):
+        board = FullBoard(True)
+        board.move(1,1)
+        self.assertEqual(board.board[0][0], "X")
 
 if __name__ == '__main__':
     unittest.main()
